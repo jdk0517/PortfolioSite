@@ -1,0 +1,20 @@
+{
+  "name": "Resume",
+  "version": "0.0.0",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "susy": "~2.2.3",
+    "jquery": "1.11.2",
+    "matchMedia": "~0.2.0"
+  },
+  "dependencies": {
+    "matchMedia": "~0.2.0"
+  }
+}
