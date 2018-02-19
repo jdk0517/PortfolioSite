@@ -9,8 +9,6 @@ var sections = [
 '#Projects', 
 '#Skills', 
 '#Employment',
-'#Education',
-'#Bio'
 ],
 activeSection = undefined;
 
@@ -41,14 +39,14 @@ var updateActiveSection = function(){
 	$.each(sections, function(index, value){
 		if($(value).offset().top + $(value).height() > cutoff) {
 			$('section, nav a').removeClass('active');
-			$('a[href='+value+']').addClass('active');
+			$(`a[href=${value}]`).addClass('active');
 			activeSection = value;
 			return false;
 		}
 	});
 };
 
-var scrollToTarget = function($target, highlight){
+const scrollToTarget = function($target, highlight){
 	var offset = ($target.is('#Top')) ? 0 : $target.offset().top;
 	if ($md_min.matches === true) offset -= 58;
 	$('html, body').stop().animate({
@@ -68,7 +66,7 @@ $(function(){
 			$('.skills').find('li').each(function(){
 				var skillTags = $(this).data('skills').split(', ');
 				skillArrays.push(skillTags);
-			});
+			})
 			$.each(skillArrays, function(){
 				skills = skills.concat(this);
 			}); 
@@ -77,11 +75,11 @@ $(function(){
 			$('#Skills').find('h1').after('<h2>Filter by tag:</h2><form class="skill-filter"></form>');
 			$.each(uniqueSkills,function(index, value){
 				var progName = value.replace(' ','-');
-				$('#Skills').find('.skill-filter').append('<label for="'+progName+'"><input id="'+progName+'" type="checkbox" value="'+value+'"/> '+value+'</label>')
+				$('#Skills').find('.skill-filter').append(`<label for="${progName}"><input id="${progName}" type="checkbox" value="${value}"/> ${value}</label>`);
 			});
-			$('#Skills').find('.skill-filter').append('<label class="clear-label"><a href="#" class="clear-filters"><svg fill="white" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+			$('#Skills').find('.skill-filter').append(`<label class="clear-label"><a href="#" class="clear-filters"><svg fill="white" xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
 				<path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-1.5 1.78l1.5 1.5 1.5-1.5.72.72-1.5 1.5 1.5 1.5-.72.72-1.5-1.5-1.5 1.5-.72-.72 1.5-1.5-1.5-1.5.72-.72z" />
-				</svg>clear filters</a></label>');
+				</svg>clear filters</a></label>`);
 		},
 		toggleMenu: function(breakpoint){
 			if (!breakpoint.matches) {
@@ -168,12 +166,3 @@ $sm_min.onchange = function() {
 $md_min.onchange = function(breakpoint){
 	$('body').removeClass('overlay-visible');
 };
-
-// //google analytics
-// (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-// 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-// 	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-// })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-// ga('create', 'UA-63021211-1', 'auto');
-// ga('send', 'pageview');

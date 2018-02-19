@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     minHTML = require('gulp-minify-html'),
     fileInclude = require('gulp-file-include'),
-    gutil = require('gulp-util');
+    // gutil = require('gulp-util'),
+    babel = require('gulp-babel');
 
 /* dev server */
 gulp.task('serve', function(){ //Connect server with livereload - dev
@@ -26,12 +27,12 @@ gulp.task('launch', ['serve'], function() { //Launch the browser once our server
     .pipe(open("./dist", {url: 'http://localhost:8080'}));
 });
 
-gulp.task('reload',function(){ //minitask to reload the page. need to do it this way because the connect.reload() function has to live inside a stream.
+gulp.task('reload', function(){ //minitask to reload the page. need to do it this way because the connect.reload() function has to live inside a stream.
     return gulp.src('')
     .pipe(connect.reload());
 });
 
-gulp.task('styles',function(){
+gulp.task('styles', function(){
 	return gulp.src('./src/scss/**/*.scss')
 	.pipe(sass())
 	.pipe(autoprefixer())
@@ -39,11 +40,14 @@ gulp.task('styles',function(){
 	.pipe(gulp.dest('./dist/css'))
 });
 
-gulp.task('scripts',function(){
+gulp.task('scripts', function(){
     return gulp.src(['./src/bower_components/jquery/dist/jquery.min.js', '.src/bower_components/matchMedia/matchMedia.js', './src/scripts/main.js'])
+    .pipe(babel({
+        presets: ['env']
+    }))
     .pipe(concat({path: 'scripts.min.js'}))
     .pipe(uglify())
-    .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
+    // .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
     .pipe(gulp.dest('./dist/scripts'))
 });
 
@@ -57,10 +61,10 @@ gulp.task('html', function(){
 });
 
 
-gulp.task('watch',function(){
+gulp.task('watch', function(){
 	gulp.watch('./src/scss/**/*', ['styles', 'reload']);
 	gulp.watch('./src/scripts/**/*.js', ['scripts','reload']);
 	gulp.watch('./src/index.html', ['html','reload']);
-})
+});
 
 gulp.task('default', ['styles', 'scripts', 'html', 'watch', 'launch']);
