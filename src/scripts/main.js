@@ -9,6 +9,7 @@ var sections = [
 '#Projects', 
 '#Skills', 
 '#Employment',
+'#More'
 ],
 activeSection = undefined;
 
