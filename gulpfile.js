@@ -9,9 +9,8 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     minHTML = require('gulp-minify-html'),
-    fileInclude = require('gulp-file-include');
-
-
+    fileInclude = require('gulp-file-include'),
+    gutil = require('gulp-util');
 
 /* dev server */
 gulp.task('serve', function(){ //Connect server with livereload - dev
@@ -44,6 +43,7 @@ gulp.task('scripts',function(){
     return gulp.src(['./src/bower_components/jquery/dist/jquery.min.js', '.src/bower_components/matchMedia/matchMedia.js', './src/scripts/main.js'])
     .pipe(concat({path: 'scripts.min.js'}))
     .pipe(uglify())
+    .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
     .pipe(gulp.dest('./dist/scripts'))
 });
 
