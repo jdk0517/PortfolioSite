@@ -347,7 +347,7 @@ header {
 		label {
 			display: block;
 			cursor: pointer;
-			margin-top: 0.625em;
+			margin: 0.625em 0;
 			@media (min-width: $sm-min) {
 				@include span(6);
 			}
@@ -364,7 +364,6 @@ header {
 		}
 		[type=checkbox], svg {
 			float: left;
-			margin-bottom: 0.625rem;
 		}
 		a {
 			display: block;
