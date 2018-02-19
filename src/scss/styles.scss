@@ -518,6 +518,9 @@ footer {
 
 //print in 'save as PDF' mode with 'A3' paper size to save as resume.
 @media print {
+	.web-only {
+		display: none !important;
+	}
 	body, html {
 		background: white;
 		font-size: 12px;
