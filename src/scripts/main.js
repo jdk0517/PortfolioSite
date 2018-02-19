@@ -3,17 +3,18 @@ $md_min = matchMedia('(min-width: 40rem)'),
 $lg_min = matchMedia('(min-width: 58.75rem)'),
 $xl_min = matchMedia('(min-width: 77.5rem)');
 
-var sections = [
+const sections = [
 '#Top',
 '#Objective',
 '#Projects', 
 '#Skills', 
 '#Employment',
 '#More'
-],
-activeSection = undefined;
+];
 
-function unique(arr) {
+let activeSection = undefined;
+
+const unique = (arr) => {
 var i,
     len = arr.length,
     out = [],
@@ -29,15 +30,17 @@ return out;
 };
 
 
-var skillArrays = [],
+let skillArrays = [],
 skills = [],
-checkedSkills = [],
-skillWidget;
+checkedSkills = [];
 
-var updateActiveSection = function(){
+const layoutIsMediumOrLarger = () => $md_min.matches === true;
+const topHeightCompensation = 58;
+
+const updateActiveSection = () => {
 	var cutoff = $(window).scrollTop();
-	if ($md_min.matches === true) cutoff +=58;
-	$.each(sections, function(index, value){
+	if (layoutIsMediumOrLarger()) cutoff += topHeightCompensation;
+	$.each(sections, (index, value) => {
 		if($(value).offset().top + $(value).height() > cutoff) {
 			$('section, nav a').removeClass('active');
 			$(`a[href=${value}]`).addClass('active');
@@ -47,9 +50,9 @@ var updateActiveSection = function(){
 	});
 };
 
-const scrollToTarget = function($target, highlight){
+const scrollToTarget = ($target, highlight) => {
 	var offset = ($target.is('#Top')) ? 0 : $target.offset().top;
-	if ($md_min.matches === true) offset -= 58;
+	if (layoutIsMediumOrLarger()) offset -= topHeightCompensation;
 	$('html, body').stop().animate({
 		scrollTop: offset
 	}, 300);
@@ -61,9 +64,11 @@ const scrollToTarget = function($target, highlight){
 	}
 };
 
-$(function(){
-	skillWidget = {
-		build: function(){
+$(function() {
+	const navLinks = document.querySelectorAll('nav a');
+	const footerJumpLinks = document.querySelectorAll('footer [class*=jump]');
+	const skillWidget = {
+		build() {
 			$('.skills').find('li').each(function(){
 				var skillTags = $(this).data('skills').split(', ');
 				skillArrays.push(skillTags);
@@ -82,7 +87,17 @@ $(function(){
 				<path d="M4 0c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm-1.5 1.78l1.5 1.5 1.5-1.5.72.72-1.5 1.5 1.5 1.5-.72.72-1.5-1.5-1.5 1.5-.72-.72 1.5-1.5-1.5-1.5.72-.72z" />
 				</svg>clear filters</a></label>`);
 		},
-		toggleMenu: function(breakpoint){
+		bindEvents() {
+			$('#Skills [type=checkbox]').on('change.filterSkills', function(e){
+				skillWidget.updateList($(this));
+			});
+			$('.clear-filters').on('click.filterSkills', function(e){
+				e.preventDefault();
+				$('.skills form [type=checkbox]').attr('checked', false);
+				$('#Skills [type=checkbox]').trigger('change.filterSkills');
+			});
+		},
+		toggleMenu(breakpoint) {
 			if (!breakpoint.matches) {
 				$('.skills h2').addClass('toggle').on('click', function(){
 					$(this).toggleClass('showing');
@@ -94,7 +109,7 @@ $(function(){
 				$('.skills form').removeClass('visible');
 			} 
 		},
-		updateList: function($input){
+		updateList($input) {
 			var value = $input.val();
 			if ($input.is(':checked')) checkedSkills.push(value);
 			else checkedSkills.splice(checkedSkills.indexOf(value),1);
@@ -124,46 +139,41 @@ $(function(){
 		},
 		init: function(){
 			skillWidget.build();
-
-			$('#Skills [type=checkbox]').on('change.filterSkills', function(e){
-				skillWidget.updateList($(this));
-			});
-			$('.clear-filters').on('click.filterSkills', function(e){
-				e.preventDefault();
-				$('.skills form [type=checkbox]').attr('checked', false);
-				$('#Skills [type=checkbox]').trigger('change.filterSkills');
-			});
-
+			skillWidget.bindEvents();
 			skillWidget.toggleMenu($sm_min);
 		}
 	};
 	
-	$('.menu-toggle').on('click.menuToggle',function(e){
+	skillWidget.init();
+	updateActiveSection();
+
+	$sm_min.onchange = () => skillWidget.toggleMenu($sm_min);
+	$md_min.onchange = () => document.querySelector('body').classList.remove('overlay-visible');
+
+	$('.menu-toggle').on('click.menuToggle', (e) => {
 		e.preventDefault();
 		$('body').toggleClass('overlay-visible');
 	});
-	$('nav a').on('click', function(e){
-		e.preventDefault(); var $target = $($(this).attr('href'));
-		scrollToTarget($target, true);
-		$('body').removeClass('overlay-visible');
+
+	window.addEventListener('scroll', () => updateActiveSection());
+
+	navLinks.forEach((link) => {
+		link.addEventListener('click', (e) => {
+			e.preventDefault();
+			const href = link.getAttribute('href');
+			scrollToTarget($(href), true);
+			$('body').removeClass('overlay-visible');
+		});
 	});
-	$('footer [class*=jump]').on('click.jump', function(e){
-		e.preventDefault(); var targetSection;
-		if ($(this).is('.jump-next')) targetSection = sections[sections.indexOf(activeSection)+1];
-		if ($(this).is('.jump-prev')) targetSection = sections[sections.indexOf(activeSection)-1];
-		if (typeof targetSection !== "undefined") scrollToTarget($(targetSection), true);
-	});
-	skillWidget.init();
-	updateActiveSection();
-	$(window).on('scroll.sections', function(){ 
-		updateActiveSection();
+
+	footerJumpLinks.forEach((link) => {
+		link.addEventListener('click', (e) => {
+			let targetSection;
+			e.preventDefault();
+			if (e.target.classList.contains('jump-next')) targetSection = sections[sections.indexOf(activeSection)+1];
+			if (e.target.classList.contains('jump-prev')) targetSection = sections[sections.indexOf(activeSection)-1];
+			if (typeof targetSection !== "undefined") scrollToTarget($(targetSection), true);
+		});
 	});
 });
  
-
-$sm_min.onchange = function() { 
-	skillWidget.toggleMenu($sm_min);
-};
-$md_min.onchange = function(breakpoint){
-	$('body').removeClass('overlay-visible');
-};

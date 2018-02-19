@@ -313,7 +313,7 @@ header {
 	}
 }
 
-.skills {
+#Skills {
 	transition: .3s height linear;
 	ul { 
 		margin-top: 1.25rem;
@@ -438,7 +438,7 @@ header {
 	}
 }
 
-.projects {
+#Projects {
 	ul {
 		&:after {
 			content: "";
@@ -479,7 +479,7 @@ header {
 	}
 }
 
-.additional-details {
+#More {
 	padding-bottom: 100vw;
 }
 
@@ -536,16 +536,13 @@ footer {
 	h4, h5, h6 {
 		font-size: 1rem;
 	}
-	header nav, .btn, .skills form, .skills h2, footer, svg {
+	header nav, .btn, #Skills form, #Skills h2, footer, svg {
 		display: none !important;
 	}
-	#Skills, .additional-details {
+	#Skills, #More {
 		border-bottom: none !important;
 	}
 	#Employment {
 		page-break-before: always;
-	}
-	.additional-details {
-		padding-bottom: 0 !important;
 	}
 }
