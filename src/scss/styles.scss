@@ -479,10 +479,11 @@ header {
 	}
 }
 
-#More {
-	padding-bottom: 100vw;
+@media screen {
+		#More {
+		padding-bottom: 100vw;
+	}
 }
-
 footer {
 	padding: 0;
 	bottom: 0;
