@@ -6,9 +6,9 @@ $xl_min = matchMedia('(min-width: 77.5rem)');
 const sections = [
 '#Top',
 '#Objective',
+'#Employment',
 '#Projects', 
 '#Skills', 
-'#Employment',
 '#More'
 ];
 
